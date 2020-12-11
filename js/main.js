@@ -73,48 +73,35 @@ const menu = [
         img: "./images/item-9.jpeg",
         desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
     },
+    {
+        id: 10,
+        title: "bBQ chicken burger",
+        category: "dinner",
+        price: 19.99,
+        img: "./images/item-10.jpeg",
+        desc: `quarter-pound cooked-to-order fresh beef patty, applewood-smoked bacon, bourbon BBQ sauce, two slices of American cheese, and crispy-fried onion strings on a toasted Artisan roll.`,
+    },
+
 ];
-
 const sectionCenter = document.querySelector(".section-center");
-const filterBtns = [...document.querySelectorAll(".filter-btn")];
+const btnContainer = document.querySelector(".btn-container");
 
 
 
-
+//=============== ADD EVENTS LISTENER WHEN WEBSITE LOADS===
 
 // Al cargar el documento se llama a la función displayMenuItems(menu). El parámetro menu = array menuItems
 window.addEventListener("DOMContentLoaded", () => {
     displayMenuItems(menu);
+    insertButtons();
 
-
-})
-
-
-
-//Cargar items depende del botón que seleccionemos
-
-filterBtns.forEach(filter => {
-    filter.addEventListener("click", (e) => {
-        let category = e.currentTarget.dataset.id;
-        const menuCategory = menu.filter(menuItem =>{
-          //console.log(menuItem.category);
-          if(menuItem.category === category){
-              return menuItem;
-          }
-        })
-
-        if(category === "all"){
-            displayMenuItems(menu);
-        }else{
-            displayMenuItems(menuCategory);
-        }
-        
-    })
-
-})
+});
 
 
 
+
+
+//================= FUNCTIONS ===============
 
 
 // Esta es la función que agrega dinámicamente el resto de los articulos en la página web
@@ -139,5 +126,68 @@ function displayMenuItems(menuItems) {
     displayMenu = displayMenu.join("");
     sectionCenter.innerHTML = displayMenu;
 }
+
+//--------------------------------------------------------------
+
+function insertButtons() {
+
+    // Mostrar los botones dependiendo de las categorías del array menu(breakfast,lunch etc..). SOLO BOTONES CON LA CATEGORÍAS COMUNES(Ej: si hay 3 categorias de breakfast, solo quiero mostras un botón por breakfast)
+
+    // MOSTRAS BOTONES DINÁMICAMENTE
+    const categories = menu.reduce((values, item) => {
+
+        if (!values.includes(item.category)) {
+            values.push(item.category)
+        }
+
+        return values;
+
+    }, ["all"]);
+
+    //console.log(categories);//todas las categorias
+    //console.log(typeof categories);
+
+
+
+    let categoryBtns = categories.map(category => {
+        //console.log(category);
+
+        return `<button class="filter-btn" type="button" data-id=${category}>${category}</button>
+        `
+    }).join("");
+
+    btnContainer.innerHTML = categoryBtns;
+    //console.log(categoryBtns);
+    const filterBtns = document.querySelectorAll(".filter-btn");
+    //console.log(filterBtns);
+
+    //Cargar items depende del botón que seleccionemos
+
+    filterBtns.forEach(filter => {
+        filter.addEventListener("click", (e) => {
+            let category = e.currentTarget.dataset.id;
+            const menuCategory = menu.filter(menuItem => {
+                //console.log(menuItem.category);
+                if (menuItem.category === category) {
+                    return menuItem;
+                }
+            })
+
+            if (category === "all") {
+                displayMenuItems(menu);
+            } else {
+                displayMenuItems(menuCategory);
+            }
+
+        })
+
+    })
+
+
+}
+
+
+//------------------------------------------------------------
+
 
 
